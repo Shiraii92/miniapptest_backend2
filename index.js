@@ -26,6 +26,9 @@ app.use((req, res, next) => {
 
 app.options('*', cors(corsOptions));
 
+// Favicon-Route hinzufügen, um 404-Fehler zu vermeiden
+app.get('/favicon.ico', (req, res) => res.status(204));
+
 const mongoose = require('mongoose');
 //const dbURI = 'mongodb+srv://admin:stress@cluster0.yjagzxb.mongodb.net/lovetap';
 const dbURI = 'mongodb+srv://blockchainexpert2000:XqIBMUYEyWKU4DBh@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
