@@ -9,15 +9,23 @@ const cors = require('cors');
 
 var app = express()
 
+
+
 const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200,
+  origin: 'https://test-three-amber-91.vercel.app', // Deine Frontend-URL hier angeben
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 200
 };
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions)); // Optionale Preflight-Anfragen
+
 
 const mongoose = require('mongoose');
 const dbURI = 'mongodb+srv://blockchainexpert2000:XqIBMUYEyWKU4DBh@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
