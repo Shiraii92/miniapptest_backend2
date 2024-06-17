@@ -20,7 +20,8 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 const mongoose = require('mongoose');
-const dbURI = 'mongodb+srv://admin:stress@cluster0.yjagzxb.mongodb.net/lovetap';
+const dbURI = 'mongodb+srv://blockchainexpert2000:XqIBMUYEyWKU4DBh@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
+//const dbURI = 'mongodb+srv://admin:stress@cluster0.yjagzxb.mongodb.net/lovetap';
 console.log('connecting to mongo');
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
