@@ -4,8 +4,11 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var user = require('./routes/user');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
 var app = express();
 
+// CORS options
 const corsOptions = {
   origin: 'https://miniapptest.vercel.app', // Deine Frontend-URL hier angeben
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -29,17 +32,24 @@ app.options('*', cors(corsOptions));
 // Favicon-Route hinzufügen, um 404-Fehler zu vermeiden
 app.get('/favicon.ico', (req, res) => res.status(204));
 
-const mongoose = require('mongoose');
-//const dbURI = 'mongodb+srv://admin:stress@cluster0.yjagzxb.mongodb.net/lovetap';
+// MongoDB Verbindung
 const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
 console.log('connecting to mongo');
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 300000, // 5 Minuten
+})
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Connection error', error));
 
 app.use('/', index);
 app.use('/user', user);
 
-app.listen(4000, function () {
+// Erhöhe das Timeout für den Express-Server
+const server = require('http').createServer(app);
+server.setTimeout(300000); // 5 Minuten
+
+server.listen(4000, function () {
   console.log('Listening on port 4000...');
 });
