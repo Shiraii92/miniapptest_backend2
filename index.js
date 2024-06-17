@@ -7,7 +7,7 @@ const cors = require('cors');
 var app = express();
 
 const corsOptions = {
-  origin: 'https://test-three-amber-91.vercel.app', // Deine Frontend-URL hier angeben
+  origin: 'https://miniapptest.vercel.app', // Deine Frontend-URL hier angeben
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 200,
