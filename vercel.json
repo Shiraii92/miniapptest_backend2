@@ -1,5 +1,11 @@
 {
     "version": 2,
+    "builds": [
+        {
+            "src": "*.js",
+            "use": "@vercel/node"
+        }
+    ],
     "rewrites": [
         {
             "source": "/(.*)",
@@ -7,13 +13,7 @@
         }
     ],
 
-    "functions": {
-        "api/*.js": {
-          "memory": 1024,
-          "maxDuration": 10
-        }
-      },
-
+    
     "headers": [
         {
             "source": "/(.*)",
