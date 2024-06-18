@@ -1,55 +1,61 @@
 var express = require('express');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var index = require('./routes/index');
-var user = require('./routes/user');
-const cors = require('cors');
-var app = express();
+var router = express.Router();
+const User = require("../models/user");
+const Women = require("../models/women");
+const Bet = require("../models/bet");
+const { getGameStatus, getCurrentRound } = require('../server/game');
 
-// Timeout Middleware
-const timeout = require('connect-timeout'); // Installiere connect-timeout über npm
-
-// Setze das Timeout auf 5 Minuten
-app.use(timeout('300s'));
-
-// Setze den Timeout für Axios global
-const axios = require('axios');
-axios.defaults.timeout = 300000; // 5 Minuten
-
-const corsOptions = {
-  origin: 'https://miniapptest.vercel.app', // Deine Frontend-URL hier angeben
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(cors(corsOptions));
-
-// Logging middleware hinzufügen
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
+router.get('/get', async function (req, res, next) {
+    const username = req.query.username;
+    var returnData;
+    if(username == "") returnData = await User.findAll();
+    else returnData = await User.findByUsername(username);
+    console.log(returnData);
+    if(returnData == null) res.send("No User Exist");
+    else res.send(returnData);
 });
 
-app.options('*', cors(corsOptions));
-
-// Favicon-Route hinzufügen, um 404-Fehler zu vermeiden
-app.get('/favicon.ico', (req, res) => res.status(204));
-
-const mongoose = require('mongoose');
-//const dbURI = 'mongodb+srv://admin:stress@cluster0.yjagzxb.mongodb.net/lovetap';
-const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
-console.log('connecting to mongo');
-mongoose.connect(dbURI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('Connection error', error));
-
-app.use('/', index);
-app.use('/user', user);
-
-app.listen(4000, function () {
-  console.log('Listening on port 4000...');
+router.post('/loginUser', async function (req, res, next) {
+    const { username, telegramId, first_name, last_name } = req.body;
+    var userData = await User.findByUsername(username);
+    if(userData == null) {
+        var returnData = await User.addUser(username, telegramId, first_name, last_name);
+        if(returnData == null) res.status(500).send("Failed to add user");
+        else {
+            const gameStatus = await getGameStatus();
+            const round = await getCurrentRound();
+            res.send({ userInfo: returnData, gameStatus: gameStatus, currentRound: round });
+        }
+    } else {
+        const gameStatus = await getGameStatus();
+        const round = await getCurrentRound();
+        res.send({ userInfo: userData, gameStatus: gameStatus, currentRound: round });
+    }
 });
+
+router.get('/selectTopPick', async function (req, res, next) {
+    const womenId = req.query.womenId;
+    const id = req.query.id;
+    var userData = await User.setTopPick(id, womenId);
+    if(userData == null) res.status(500).send("Failed to set top pick");
+    else res.send(userData);
+});
+
+router.get('/addVote', async function (req, res, next) {
+    const womenId = req.query.womenId;
+    const username = req.query.username;
+    const returnData = await User.addPoint(username, womenId);
+    await Women.addVote(womenId);
+    res.send(returnData);
+});
+
+router.get('/bet', async function (req, res, next) {
+    const womenId = req.query.womenId;
+    const username = req.query.username;
+    const point = req.query.point;
+    const returnData = await User.removeBet(username, point);
+    await Bet.addBet(username, point, womenId);
+    res.send(returnData);
+});
+
+module.exports = router;

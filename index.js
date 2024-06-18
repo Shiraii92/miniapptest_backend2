@@ -9,12 +9,17 @@ const mongoose = require('mongoose');
 var app = express();
 
 // CORS options
+
 const corsOptions = {
-  origin: 'https://miniapptest.vercel.app', // Deine Frontend-URL hier angeben
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: 'https://miniapptest.vercel.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type',
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 200
 };
+
+app.use(cors(corsOptions));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
