@@ -28,7 +28,7 @@ roundSchema.statics.InitRound = async function(gameId) {
       "result": "",
       "endAt": 600000
     };   
-    const newRound = await Round.create(round);
+    await Round.create(round);
     return round;
   } catch (err) {
     console.error('Error insert user:', err);
