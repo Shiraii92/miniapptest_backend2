@@ -4,11 +4,28 @@ const Bet = require("../models/bet")
 const Game = require("../models/game")
 const Round = require("../models/round")
 
+async function initializeData() {
+    try {
+        // Überprüfe, ob bereits ein Spiel existiert
+        const existingGame = await Game.findOne({});
+        if (!existingGame) {
+            console.log("No game found, initializing data...");
 
-async function InitGamestatus(){
-    var gameId = await Game.addNewGame();
-    console.log("GAME ID",gameId);
-    Round.InitRound(gameId);
+            // Neues Spiel hinzufügen
+            var gameId = await Game.addNewGame();
+            console.log("New Game ID", gameId);
+
+            // Neue Runde initialisieren
+            await Round.InitRound(gameId);
+
+            // Beispiel: Weitere initiale Daten hier einfügen, falls notwendig
+            console.log("Data initialized successfully");
+        } else {
+            console.log("Game already exists, skipping initialization");
+        }
+    } catch (error) {
+        console.error("Error initializing data:", error);
+    }
 }
 
 async function getCurrentRound(){
@@ -103,7 +120,7 @@ async function InitRound(gameId,roundId){
     }
     else
     {
-        InitGamestatus();
+        initializeData();
     }
 }
-module.exports = { InitGamestatus, getGameStatus, getCurrentRound, syncTime };
+module.exports = { initializeData, getGameStatus, getCurrentRound, syncTime, endCurrentRound, setWinners, InitRound };
