@@ -25,6 +25,10 @@ async function syncTime(){
 async function getGameStatus(){
     var gameId = await Game.getCurrentGameId();
     var rounds = await Round.getRoundsByGameId(gameId);
+    if (!rounds || rounds.length === 0) {
+        console.log(`No rounds found for gameId: ${gameId}`);
+        return [];
+      }
     var gamestatus = [];
     for(var i=1; i<=rounds.length; i++){
         var players = rounds[i-1].players.split(',');
@@ -64,6 +68,10 @@ async function getGameStatus(){
 async function endCurrentRound(){
     var gameId = await Game.getCurrentGameId();
     var round = await Round.getCurrentRound(gameId);
+    if (!round) {
+        console.log(`No current round found for gameId: ${gameId}`);
+        return;
+      }
     await setWinners(round);
     InitRound(gameId,round.roundId);
 }

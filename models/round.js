@@ -27,8 +27,8 @@ roundSchema.statics.InitRound = async function(gameId) {
       "players": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32",
       "result": "",
       "endAt": 600000
-    };
-    await Round.create(round);
+    };   
+    const newRound = await Round.create(round);
     return round;
   } catch (err) {
     console.error('Error insert user:', err);
@@ -52,7 +52,7 @@ roundSchema.statics.AddNewRound = async function(gameId,roundId){
     console.error('Error insert user:', err);
     throw err;
   }
-}
+};
 
 roundSchema.statics.getRoundsByGameId = async function(gameId) {
   var rounds = await Round.find({});
@@ -61,13 +61,19 @@ roundSchema.statics.getRoundsByGameId = async function(gameId) {
     if(rounds[i].gameId == gameId)
       returnData.push(rounds[i]);
   return returnData;
-}
+};
+
 roundSchema.statics.getCurrentRound = async function(gameId) {
   var rounds = await Round.find({});
-  for(var i=0;i<rounds.length;i++)
-    if(rounds[i].gameId == gameId && rounds[i].result == "")
+  for(var i=0;i<rounds.length;i++) {
+    if(rounds[i].gameId == gameId && rounds[i].result == "") {
       return rounds[i];
-}
+    }
+  }
+  console.log(`No current round found for gameId: ${gameId}`);
+  return null; // oder eine sinnvolle Rückgabe, wenn keine Runde gefunden wird
+};
+
 
 roundSchema.statics.syncCurrentRound = async function(gameId){
   var rounds = await Round.find({});
@@ -88,7 +94,7 @@ roundSchema.statics.syncCurrentRound = async function(gameId){
   };
   const round = await this.updateOne(filter, updateDoc);
   return round;
-}
+};
 roundSchema.statics.setRoundResult = async function(gameId,roundId,result){
   try {
     const filter = { gameId: gameId, roundId: roundId };
@@ -103,7 +109,7 @@ roundSchema.statics.setRoundResult = async function(gameId,roundId,result){
     console.error('Error finding user by username:', err);
     throw err;
   }
-}
+};
 
 
 const Round = mongoose.model('Round', roundSchema);
