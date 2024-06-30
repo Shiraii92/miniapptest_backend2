@@ -1,7 +1,7 @@
 const User = require("../models/user")
 const Women = require("../models/women")
 const Bet = require("../models/bet")
-const Game = require("../models")
+const Game = require("../models/game")
 const Round = require("../models/round")
 
 

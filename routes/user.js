@@ -4,7 +4,7 @@ const User = require("../models/user");
 const Women = require("../models/women");
 const Bet = require("../models/bet");
 const Round = require("../models/round");
-const { getGameStatus, getCurrentRound } = require('../server/game.js');
+const { getGameStatus, getCurrentRound } = require('../server/game');
 
 
 router.get('/getGameStatus', async function (req, res, next) {
