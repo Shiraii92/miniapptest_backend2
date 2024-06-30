@@ -21,6 +21,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 // Logging middleware hinzufügen
 app.use((req, res, next) => {
@@ -34,13 +35,12 @@ app.options('*', cors(corsOptions));
 app.get('/favicon.ico', (req, res) => res.status(204));
 
 // MongoDB Verbindung
-const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
+const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/test?retryWrites=true&w=majority&appName=miniapptest';
 console.log('connecting to mongo');
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 300000, // 5 Minuten
-  useCreateIndex: true,
 })
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Connection error', error));
