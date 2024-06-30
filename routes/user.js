@@ -24,19 +24,20 @@ router.post('/loginUser', async function (req, res, next) {
         else {
             const gameStatus = await getGameStatus();
             const round = await getCurrentRound();
-            res.send({ userInfo: returnData, gameStatus: gameStatus, currentRound: round });
+            res.send({ userInfo: returnData, gameStatus: gameStatus, currentRound: round, womens:womens });
         }
     } else {
         const gameStatus = await getGameStatus();
         const round = await getCurrentRound();
-        res.send({ userInfo: userData, gameStatus: gameStatus, currentRound: round });
+        const womens = await Women.getAllWomens();
+        res.send({ userInfo: userData, gameStatus: gameStatus, currentRound: round, womens:womens });
     }
 });
 
 router.get('/selectTopPick', async function (req, res, next) {
     const womenId = req.query.womenId;
-    const id = req.query.id;
-    var userData = await User.setTopPick(id, womenId);
+    const username = req.query.username;
+    var userData = await User.setTopPick(username, womenId);
     if(userData == null) res.status(500).send("Failed to set top pick");
     else res.send(userData);
 });

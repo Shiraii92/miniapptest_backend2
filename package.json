@@ -1,5 +1,5 @@
 {
-  "name": "Flip-backend",
+  "name": "my-flip-backend",
   "version": "1.0.0",
   "description": "Backend of Flip Telegram MiniAPP",
   "main": "index.js",
