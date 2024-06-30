@@ -59,12 +59,16 @@ router.post('/selectTopPick', async function (req, res, next) {
     }
 });
 
-router.get('/addVote', async function (req, res, next) {
-    const womenId = req.query.womenId;
-    const username = req.query.username;
-    const returnData = await User.addPoint(username, womenId);
-    await Women.addVote(womenId);
-    res.send(returnData);
+router.post('/addVote', async function (req, res, next) {
+    const { womenId, username } = req.body;
+    try {
+        const returnData = await User.addPoint(username, womenId);
+        await Women.addVote(womenId);
+        res.send(returnData);
+    } catch (error) {
+        console.error('Error adding vote:', error);
+        res.status(500).send("Error adding vote");
+    }
 });
 
 router.post('/updatePoints', async function (req, res, next) {
