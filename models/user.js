@@ -30,10 +30,10 @@ userSchema.statics.findByUsername = async function(name) {
 userSchema.statics.addUser = async function(data){
   try {
     const user ={
-      "username" : data,
-      "point": 100,
-      "top_pick": 0,
-      "vote_data": ""
+      username: data.username,
+      point: 100,
+      top_pick: 0,
+      vote_data: ""
     };
     await User.create(user);
     return user;

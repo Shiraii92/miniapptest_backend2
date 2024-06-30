@@ -5,6 +5,17 @@ const Women = require("../models/women");
 const Bet = require("../models/bet");
 const { getGameStatus, getCurrentRound } = require('../server/game');
 
+
+router.get('/getGameStatus', async function (req, res, next) {
+    try {
+        const gameStatus = await getGameStatus();
+        const currentRound = await getCurrentRound();
+        res.send({ gameStatus: gameStatus, currentRound: currentRound });
+    } catch (error) {
+        res.status(500).send("Error fetching game status");
+    }
+});
+
 router.get('/get', async function (req, res, next) {
     const username = req.query.username;
     var returnData;
@@ -52,13 +63,49 @@ router.get('/addVote', async function (req, res, next) {
     res.send(returnData);
 });
 
+router.post('/updatePoints', async function (req, res, next) {
+    const { id, points } = req.body;
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        user.point = points;
+        await user.save();
+        res.send(user);
+    } catch (error) {
+        console.error('Error updating points:', error);
+        res.status(500).send("Error updating points");
+    }
+});
+
 router.get('/bet', async function (req, res, next) {
-    const womenId = req.query.womenId;
-    const username = req.query.username;
-    const point = req.query.point;
-    const returnData = await User.removeBet(username, point);
-    await Bet.addBet(username, point, womenId);
-    res.send(returnData);
+    const { username, womenId, point } = req.query;
+    try {
+        const user = await User.findByUsername(username);
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        const points = parseInt(point);
+        if (user.point < points) {
+            return res.status(400).send("Insufficient points");
+        }
+
+        // Remove the points from user
+        user.point -= points;
+        await user.save();
+
+        // Add the bet
+        const newBet = await Bet.addBet(username, points, womenId);
+
+        // Return updated user points and bet
+        const updatedUser = await User.findByUsername(username);
+        res.send({ point: updatedUser.point, bets: newBet });
+    } catch (error) {
+        console.error('Error placing bet:', error);
+        res.status(500).send("Error placing bet");
+    }
 });
 
 module.exports = router;
