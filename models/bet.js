@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
 const betSchema = new mongoose.Schema({
-  betId:{
-    type:Number,
-  },
   username: {
     type: String,
     required: true,
@@ -17,33 +14,33 @@ const betSchema = new mongoose.Schema({
     required: true,
   },
   boardId: {
-    type:Number,
+    type: Number,
     required: true,
   },
   womenId: {
     type: Number,
     required: true,
   },
-  win:{
-    type:Number,
+  win: {
+    type: Number,
     required: true,
   }
 });
 
-betSchema.statics.addBet = async function(name,point,womenId) {
+betSchema.statics.addBet = async function(username, point, womenId) {
   try {
-    const bet ={
-      "username" : name,
-      "point": point,
-      "roundId": 0,
-      "boardId": 0,
-      "womenId": womenId,
-      "win": 0
+    const bet = {
+      username: username,
+      point: point,
+      roundId: 1, // Setze die korrekte Rundennummer
+      boardId: 1, // Setze die korrekte Board-ID
+      womenId: womenId,
+      win: 0
     };
-    await Bet.create(bet);
-    return bet;
+    const newBet = await Bet.create(bet);
+    return newBet;
   } catch (err) {
-    console.error('Error insert user:', err);
+    console.error('Error inserting bet:', err);
     throw err;
   }
 };

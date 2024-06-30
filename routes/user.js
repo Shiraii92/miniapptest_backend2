@@ -47,12 +47,16 @@ router.post('/loginUser', async function (req, res, next) {
 });
 
 
-router.get('/selectTopPick', async function (req, res, next) {
-    const womenId = req.query.womenId;
-    const username = req.query.username;
-    var userData = await User.setTopPick(username, womenId);
-    if(userData == null) res.status(500).send("Failed to set top pick");
-    else res.send(userData);
+router.post('/selectTopPick', async function (req, res, next) {
+    const { womenId, username } = req.body;
+    try {
+        var userData = await User.setTopPick(username, womenId);
+        if(userData == null) res.status(500).send("Failed to set top pick");
+        else res.send(userData);
+    } catch (error) {
+        console.error('Error setting top pick:', error);
+        res.status(500).send("Error setting top pick");
+    }
 });
 
 router.get('/addVote', async function (req, res, next) {
@@ -79,8 +83,8 @@ router.post('/updatePoints', async function (req, res, next) {
     }
 });
 
-router.get('/bet', async function (req, res, next) {
-    const { username, womenId, point } = req.query;
+router.post('/bet', async function (req, res, next) {
+    const { username, womenId, point } = req.body;
     try {
         const user = await User.findByUsername(username);
         if (!user) {
