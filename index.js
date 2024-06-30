@@ -3,7 +3,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var user = require('./routes/user');
-var game = require('./server/game');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -35,7 +34,7 @@ app.options('*', cors(corsOptions));
 app.get('/favicon.ico', (req, res) => res.status(204));
 
 // MongoDB Verbindung
-const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/test?retryWrites=true&w=majority&appName=miniapptest';
+const dbURI = 'mongodb+srv://blockchainexpert2000:letsgo@miniapptest.zrrcu4q.mongodb.net/?retryWrites=true&w=majority&appName=miniapptest';
 console.log('connecting to mongo');
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
