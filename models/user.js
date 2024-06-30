@@ -8,12 +8,15 @@ const userSchema = new mongoose.Schema({
   },
   point: {
     type: Number,
+    default: 100
   },
   top_pick: {
     type: Number,
+    default: 0
   },
   vote_data: {
     type: String,
+    default: ""
   }
 });
 
