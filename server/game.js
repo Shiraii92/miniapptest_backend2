@@ -21,9 +21,10 @@ async function getCurrentRound() {
     try {
         var gameId = await Game.getCurrentGameId();
         var round = await Round.getCurrentRound(gameId);
-        return round;
+        return round || { roundId: null, endAt: null }; // Standardwert setzen, falls keine Runde gefunden wird
     } catch (error) {
         console.error('Error in getCurrentRound:', error);
+        return { roundId: null, endAt: null }; // Standardwert bei Fehler
     }
 }
 
