@@ -15,7 +15,7 @@ router.get('/get', async function (req, res, next) {
     else res.send(returnData);
 });
 
-router.get('/selectUser', async function (req, res, next) {
+router.post('/loginUser', async function (req, res, next) {
     const username = req.query.username;
     var userData = await User.findByUsername(username);
     if(userData == null) {
