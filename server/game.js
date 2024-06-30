@@ -107,4 +107,5 @@ async function InitRound(gameId,roundId){
         InitGamestatus();
     }
 }
-module.exports = { InitGamestatus, getGameStatus, getCurrentRound, syncTime, endCurrentRound, setWinners, InitRound };
+module.exports = { InitGamestatus, getGameStatus, getCurrentRound, syncTime };
+//module.exports = { initializeData, InitGamestatus, getGameStatus, getCurrentRound, syncTime, endCurrentRound, setWinners, InitRound };

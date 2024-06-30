@@ -10,7 +10,6 @@ const mongoose = require('mongoose');
 var app = express();
 
 // CORS options
-
 const corsOptions = {
   origin: 'https://miniapptest.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -20,12 +19,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors(corsOptions));
 
 // Logging middleware hinzufügen
 app.use((req, res, next) => {
@@ -45,6 +41,7 @@ mongoose.connect(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 300000, // 5 Minuten
+  useCreateIndex: true,
 })
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Connection error', error));

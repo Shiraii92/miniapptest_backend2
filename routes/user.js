@@ -24,15 +24,17 @@ router.post('/loginUser', async function (req, res, next) {
         else {
             const gameStatus = await getGameStatus();
             const round = await getCurrentRound();
-            res.send({ userInfo: returnData, gameStatus: gameStatus, currentRound: round, womens:womens });
+            const womens = await Women.getAllWomens();
+            res.send({ userInfo: returnData, gameStatus: gameStatus, currentRound: round, womens: womens });
         }
     } else {
         const gameStatus = await getGameStatus();
         const round = await getCurrentRound();
         const womens = await Women.getAllWomens();
-        res.send({ userInfo: userData, gameStatus: gameStatus, currentRound: round, womens:womens });
+        res.send({ userInfo: userData, gameStatus: gameStatus, currentRound: round, womens: womens });
     }
 });
+
 
 router.get('/selectTopPick', async function (req, res, next) {
     const womenId = req.query.womenId;
