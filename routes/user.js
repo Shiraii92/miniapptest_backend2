@@ -15,7 +15,7 @@ router.get('/get', async function (req, res, next) {
     else res.send(returnData);
 });
 
-router.get('/loginUser', async function (req, res, next) {
+router.post('/loginUser', async function (req, res, next) {
     const { username, telegramId, first_name, last_name } = req.body;
     var userData = await User.findByUsername(username);
     if(userData == null) {
