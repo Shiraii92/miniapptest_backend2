@@ -3,6 +3,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var user = require('./routes/user');
+var game = require('./server/game');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -51,6 +52,19 @@ mongoose.connect(dbURI, {
 app.use('/', index);
 app.use('/user', user);
 
+app.get('/game/status', async (req, res) => {
+  try {
+    const gameStatus = await game.getGameStatus();
+    const currentRound = await game.getCurrentRound();
+    res.json({
+      gameStatus,
+      currentRound
+    });
+  } catch (error) {
+    console.error('Error fetching game status:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 // Erhöhe das Timeout für den Express-Server
 const server = require('http').createServer(app);
 server.setTimeout(300000); // 5 Minuten
