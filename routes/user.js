@@ -15,12 +15,12 @@ router.get('/get', async function (req, res, next) {
     else res.send(returnData);
 });
 
-router.post('/loginUser', async function (req, res, next) {
-    const username = req.query.username;
+router.get('/loginUser', async function (req, res, next) {
+    const { username, telegramId, first_name, last_name } = req.body;
     var userData = await User.findByUsername(username);
     if(userData == null) {
-        var returnData = await User.addUser(username);
-        if(returnData == null) res.send("Failed to add user");
+        var returnData = await User.addUser(username, telegramId, first_name, last_name);
+        if(returnData == null) res.status(500).send("Failed to add user");
         else {
             const gameStatus = await getGameStatus();
             const round = await getCurrentRound();
